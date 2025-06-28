@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3組の数値の絶対値の差とその平均</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 25px;
+            font-size: 26px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .pair-group {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            margin-bottom: 20px;
+            background-color: #f9f9f9;
+        }
+
+        .input-row {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .input-group {
+            flex: 1;
+            text-align: left;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        .input-group input[type="tel"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .pair-result {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #666;
+            font-weight: bold;
+        }
+
+        .pair-result span {
+            color: #007bff;
+            font-size: 20px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 14px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 20px;
+            margin-top: 30px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .final-result {
+            margin-top: 35px;
+            font-size: 22px;
+            color: #333;
+            font-weight: bold;
+            background-color: #e6ffe6;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #a8e6a8;
+        }
+
+        .final-result span {
+            color: #28a745;
+            font-size: 36px;
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>3組の数値の絶対値の差とその平均</h1>
+
+        <div class="pair-group">
+            <h2>ペア 1</h2>
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="num1a">数値 A:</label>
+                    <input type="tel" id="num1a" inputmode="numeric" pattern="[0-9]*" required>
+                </div>
+                <div class="input-group">
+                    <label for="num1b">数値 B:</label>
+                    <input type="tel" id="num1b" inputmode="numeric" pattern="[0-9]*" required>
+                </div>
+            </div>
+            <p class="pair-result">絶対値の差: <span id="diffResult1"></span></p>
+        </div>
+
+        <div class="pair-group">
+            <h2>ペア 2</h2>
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="num2a">数値 A:</label>
+                    <input type="tel" id="num2a" inputmode="numeric" pattern="[0-9]*" required>
+                </div>
+                <div class="input-group">
+                    <label for="num2b">数値 B:</label>
+                    <input type="tel" id="num2b" inputmode="numeric" pattern="[0-9]*" required>
+                </div>
+            </div>
+            <p class="pair-result">絶対値の差: <span id="diffResult2"></span></p>
+        </div>
+
+        <div class="pair-group">
+            <h2>ペア 3</h2>
+            <div class="input-row">
+                <div class="input-group">
+                    <label for="num3a">数値 A:</label>
+                    <input type="tel" id="num3a" inputmode="numeric" pattern="[0-9]*" required>
+                </div>
+                <div class="input-group">
+                    <label for="num3b">数値 B:</label>
+                    <input type="tel" id="num3b" inputmode="numeric" pattern="[0-9]*" required>
+                </div>
+            </div>
+            <p class="pair-result">絶対値の差: <span id="diffResult3"></span></p>
+        </div>
+
+        <button id="calculateButton">絶対値の差と最終平均を計算</button>
+        <p class="error-message" id="errorMessage"></p>
+
+        <div class="final-result">
+            <p>最終平均値: <span id="finalAverageResult"></span></p>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 各入力フィールドの要素を取得
+            const num1aInput = document.getElementById('num1a');
+            const num1bInput = document.getElementById('num1b');
+            const num2aInput = document.getElementById('num2a');
+            const num2bInput = document.getElementById('num2b');
+            const num3aInput = document.getElementById('num3a');
+            const num3bInput = document.getElementById('num3b');
+
+            // 各結果表示欄の要素を取得
+            const diffResult1Span = document.getElementById('diffResult1');
+            const diffResult2Span = document.getElementById('diffResult2');
+            const diffResult3Span = document.getElementById('diffResult3');
+            const finalAverageResultSpan = document.getElementById('finalAverageResult');
+            const errorMessageSpan = document.getElementById('errorMessage');
+
+            const calculateButton = document.getElementById('calculateButton');
+
+            // 数値のバリデーション関数 (数値であるかのみをチェック)
+            function isValidNumber(num) {
+                // Number.isFinite() を使うと、数値であり、かつ有限な値（Infinity, -Infinity, NaN ではない）かを厳密にチェックできます
+                return typeof num === 'number' && Number.isFinite(num);
+            }
+
+            calculateButton.addEventListener('click', () => {
+                errorMessageSpan.textContent = ''; // 前回のエラーメッセージをクリア
+
+                // input.value は文字列なので、parseIntで数値に変換します
+                const num1a = parseInt(num1aInput.value);
+                const num1b = parseInt(num1bInput.value);
+                const num2a = parseInt(num2aInput.value);
+                const num2b = parseInt(num2bInput.value);
+                const num3a = parseInt(num3aInput.value);
+                const num3b = parseInt(num3bInput.value);
+
+                // 全ての入力が有効な数値であるかを確認
+                if (!isValidNumber(num1a) || !isValidNumber(num1b) ||
+                    !isValidNumber(num2a) || !isValidNumber(num2b) ||
+                    !isValidNumber(num3a) || !isValidNumber(num3b)) {
+                    errorMessageSpan.textContent = "すべてのフィールドに有効な数値を入力してください。";
+                    diffResult1Span.textContent = '';
+                    diffResult2Span.textContent = '';
+                    diffResult3Span.textContent = '';
+                    finalAverageResultSpan.textContent = '';
+                    return;
+                }
+
+                // 各ペアの絶対値の差を計算
+                const diff1 = Math.abs(num1a - num1b);
+                const diff2 = Math.abs(num2a - num2b);
+                const diff3 = Math.abs(num3a - num3b);
+
+                // 個別の結果を表示
+                diffResult1Span.textContent = diff1;
+                diffResult2Span.textContent = diff2;
+                diffResult3Span.textContent = diff3;
+
+                // 3つの差の平均値を計算
+                const finalAverage = (diff1 + diff2 + diff3) / 3;
+
+                // 最終平均値を小数点以下2桁で表示
+                finalAverageResultSpan.textContent = finalAverage.toFixed(2);
+            });
+        });
+    </script>
+</body>
+</html>
